@@ -38,6 +38,16 @@ See [server configuration](server/README.md), [local deployment configuration](d
 - The revision worker needs an available operator-managed machine, external tools and separately authorized services. This repository does not provision them or install a background service automatically.
 - Recordings, notes, source and worker artifacts can contain client information. Operators must arrange consent, access, backups, retention and deletion. Signed hosted media URLs may remain valid briefly after access is revoked.
 
+## How Review Room uses Switch
+
+For freelancers and small studios, Switch keeps an explicitly shared client review package, the coding agent's exact-diff discussion and the authorized human approval in one room/thread. The optional [Switch bridge](switch/README.md) uses Switch's documented SSE-in / HTTP-out protocol and the existing Review Room proposal/hash gate. With Switch off, the normal room, replay and owner workflow remains unchanged.
+
+Use Switch Console to manage Docker and its bundled Mattermost; configure an isolated room with the original [room template](switch/review-room.template.yaml), reviewer/coding agents and freelancer/client users. Provision a dedicated agent token privately, configure the environment names in the bridge guide, then deliberately start `npm run switch:bridge -- --share switch/.local/package.json`. A token alone never shares a review.
+
+The bridge posts an opted-in finished package's transcript, sanitized collage link and replay URL, asks the coding agent to review the existing exact diff, and waits for an allowlisted human in that exact thread to approve the review ID and hashes. It preserves backend owner authorization and the private preview; guests and agents cannot approve. No second model rewrite runs after approval.
+
+This is a manual adapter for an existing proposed revision, not automatic browser submission. Nineteen synthetic bridge tests pass. Docker was available, but live Switch/Mattermost delivery, template import and preview completion were not runtime-tested; no demonstration screenshot was captured. See the bridge guide for setup, safeguards and full limits.
+
 ## Checks
 
 ```sh
