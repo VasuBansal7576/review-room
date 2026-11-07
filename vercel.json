@@ -1,0 +1,18 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/handler.js": {
+      "maxDuration": 300
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/handler?rrpath=api/:path*"
+    },
+    {
+      "source": "/recordings/:room/:recording",
+      "destination": "/api/handler?rrpath=recordings/:room/:recording"
+    }
+  ]
+}

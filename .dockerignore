@@ -1,0 +1,14 @@
+**
+!package.json
+!server/
+!server/index.js
+!server/access.js
+!server/turn.js
+!server/cloudflare-turn.js
+!server/events.js
+!server/switch.js
+!public/
+!public/**
+!deploy/
+!deploy/Dockerfile
+!deploy/entrypoint.sh

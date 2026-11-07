@@ -1,0 +1,48 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 3000
+      REVIEW_ROOM_DATA_DIR: /var/lib/review-room
+      REVIEW_OWNER_PASSWORD: ${REVIEW_OWNER_PASSWORD:?Set a strong owner password of at least 32 characters}
+      REVIEW_PUBLIC_ORIGIN: ${REVIEW_PUBLIC_ORIGIN:?Set the exact HTTPS public origin}
+      ICE_SERVERS_JSON: ${ICE_SERVERS_JSON:-}
+      TURN_URLS_JSON: ${TURN_URLS_JSON:-}
+      TURN_SHARED_SECRET: ${TURN_SHARED_SECRET:-}
+      TURN_CREDENTIAL_TTL_SECONDS: ${TURN_CREDENTIAL_TTL_SECONDS:-}
+      CLOUDFLARE_TURN_KEY_ID: ${CLOUDFLARE_TURN_KEY_ID:-}
+      CLOUDFLARE_TURN_API_TOKEN: ${CLOUDFLARE_TURN_API_TOKEN:-}
+      CLOUDFLARE_TURN_TTL_SECONDS: ${CLOUDFLARE_TURN_TTL_SECONDS:-}
+      SWITCH_AGENT_BASE_URL: ${SWITCH_AGENT_BASE_URL:-}
+      SWITCH_AGENT_ID: ${SWITCH_AGENT_ID:-}
+      SWITCH_AGENT_API_KEY: ${SWITCH_AGENT_API_KEY:-}
+      SWITCH_ROOM_ID: ${SWITCH_ROOM_ID:-}
+      SWITCH_HANDOFF_MENTION: ${SWITCH_HANDOFF_MENTION:-}
+    volumes:
+      - review_data:/var/lib/review-room
+    restart: unless-stopped
+    init: true
+
+  proxy:
+    image: caddy:2
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:80"
+      - "127.0.0.1:${HTTPS_PORT:-8443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped
+
+volumes:
+  review_data:
+  caddy_data:
+  caddy_config:

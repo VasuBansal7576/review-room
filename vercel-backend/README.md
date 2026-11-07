@@ -1,0 +1,25 @@
+# Hosted backend
+
+This backend runs the private Review Room deployment on Vercel and Supabase. Hosted checks cover owner and guest access, recordings, event delivery, and the approved revision journey. Synthetic cross-host media evidence has its own verification report. Use your own private Supabase project and server credentials when reproducing the setup.
+
+Apply `schema.sql` and then `revisions.sql` in the Supabase project's SQL editor. Create a private Storage bucket named `review-room-recordings`, restrict MIME type to `video/webm`, and set the bucket file limit to 50 MiB or less. Confirm that the bucket is private and has no anonymous object access policies. All public tables enable RLS and do not grant access to `anon` or `authenticated`; the application accesses them using the service role. Never put the service role key in browser code.
+
+Set Vercel server environment variables `SUPABASE_URL` (the HTTPS origin, without a trailing slash), `SUPABASE_SERVICE_ROLE_KEY`, `REVIEW_PUBLIC_ORIGIN` (the exact HTTPS app origin, without a trailing slash), and `REVIEW_OWNER_PASSWORD` (at least 32 characters). The public origin is checked for all mutations. Use the stable production URL rather than a preview URL. The Vercel route must forward `/api/*` and `/recordings/*` to this handler and serve the frontend independently. Configure a function execution limit above 240 seconds to permit the event stream. TURN configuration remains separate.
+
+Client uploads must request `POST /api/rooms/:roomId/recordings/upload-url` with JSON `{contentType, size}` and PUT the file to the returned `uploadUrl`. The returned `url` is the stable authenticated room recording URL. The backend creates a 60-second signed URL and redirects authorized playback requests to it. An already issued download URL continues to work until it expires after guest access is revoked. Supabase signed upload URLs also outlive application revocation for their own lifetime. Bucket file size limits are essential because declared request size does not constrain the signed PUT.
+
+The event stream polls shared Postgres and reconnects after four minutes. WebRTC peers may reconnect when that happens. A database trigger deletes ephemeral signaling events older than ten minutes when a new event arrives in that room. Durable room history has a conservative 3 MiB budget, with up to 1 MiB reserved for recording deletion events. The trigger takes a per-room transaction lock before measuring and writing events. The generated room response still needs a real Vercel payload-limit check.
+
+Each recording reserves 50 MiB regardless of its declared size. A locked database function permits at most 20 reservations globally and five per room. Twenty reservations at 50 MiB reserve 1,000 MiB (1,048,576,000 bytes), exceeding a decimal 1 GB storage allowance; verify the project storage allowance and existing usage before filling the cap. Raising this application cap does not upgrade the plan or authorize spending. These bounds depend on configuring the bucket's file size limit correctly. Unfinished uploads and deleted recordings retain their slot for at least three hours from issuance because a signed upload URL remains usable for two hours. When a later upload is requested, expired reservations are claimed, their objects are deleted, and their slots are released. Once a recording event is stored, its reservation stays active until deletion. Cleanup on a later upload is not a background maintenance service. The system does not impose a global quota across all room histories. Restrict the pilot and configure Supabase usage monitoring, backups and retention before client use.
+
+Run the mock behavioral checks with `node --test vercel-backend/handler.test.js`. These checks do not test real Supabase APIs, Vercel streaming, cross-origin uploads, separate networks, TURN, backups, or privacy settings. Live acceptance still needs to cover those.
+
+## Revision jobs
+
+The revision migration adds private revision rows and revocable worker sessions. Browser mutations require owner authorization and the configured request origin. Guests can inspect a proposal and its ready preview, but cannot request or approve changes.
+
+The worker bootstraps a dedicated session through owner authorization. It then uses that bearer only for claims, heartbeat, and fenced completion. Active heartbeats renew the same session for another 24 hours. A revoked or expired session cannot mint replacement authority. Explicit owner reauthorization is required after rejection.
+
+Approval binds the exact proposal hash. Application materializes those approved bytes without another model call. A failed preparation can regenerate. A failed apply can retry the same approved artifact. Old leases cannot overwrite newer work. A room supports up to 20 saved revision requests.
+
+Preview HTML is fetched by the authenticated parent and rendered in a sandboxed srcdoc with restrictive content policy. The source download retains the exact approved HTML. It is not a deployment to the original website.

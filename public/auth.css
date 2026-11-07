@@ -1,0 +1,27 @@
+.access-pending #app { visibility: hidden; }
+.access-modal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 20px; background: rgba(28, 36, 26, .55); }
+.access-modal.hidden { display: none; }
+.access-card { position: relative; width: min(440px, 100%); padding: 30px; background: #19191c; border-radius: 14px; color: #f4f4f5; box-shadow: 0 18px 80px rgba(0,0,0,.2); }
+.access-card h2 { margin: 0 24px 10px 0; font-size: 22px; }
+.access-card p { margin: 0 0 18px; font-size: 14px; line-height: 1.5; }
+.access-close { position: absolute; right: 20px; top: 18px; border: 0; background: transparent; font-size: 24px; cursor: pointer; }
+.access-form { display: grid; gap: 9px; }
+.access-label { font-size: 12px; font-weight: 700; }
+.access-input { width: 100%; min-width: 0; padding: 12px; border: 1px solid #38383e; border-radius: 7px; font: inherit; }
+.access-submit, .access-secondary { padding: 12px 16px; border: 0; border-radius: 7px; background: #f4f4f5; color: white; font: inherit; cursor: pointer; }
+.access-secondary { background: #242428; color: #b8b8bf; margin-top: 12px; }
+.access-submit:disabled { opacity: .5; cursor: wait; }
+.access-error { color: #ff9187; min-height: 1em; margin: 0 !important; font-size: 12px !important; }
+.access-account { border: 0; background: transparent; color: #aaaab2; font: inherit; font-size: 12px; cursor: pointer; }
+.access-rooms { padding: 24px; background: white; border: 1px solid #303035; border-radius: 12px; }
+.access-rooms h2 { margin: 0 0 12px; font-size: 18px; }
+.access-rooms a { display: block; padding: 8px 0; color: #c4c4cd; overflow-wrap: anywhere; }
+.invite-banner { position: sticky; top: 8px; z-index: 4; display: flex; align-items: center; gap: 12px; margin: -12px 0 20px; padding: 12px 14px; background: #18181b; border: 1px solid #34343a; border-radius: 10px; font-family: inherit; color: #eeeef1; box-shadow: 0 8px 30px #31452c14; }
+.invite-banner strong { font-size: 13px; white-space: nowrap; }
+.invite-banner input { flex: 1; margin: 0; padding: 9px 11px; font-size: 12px; background: #19191c; }
+.invite-banner button { border: 1px solid #36363d; background: #19191c; border-radius: 7px; padding: 9px 12px; font-weight: 700; font-size: 12px; color: #d4d4da; }
+.invite-banner.cta { justify-content: space-between; }
+.invite-banner .button.dark { background: #eeeef1; color: #19191c; border-color: #eeeef1; margin-left: auto; }
+.invite-banner .invite-dismiss { border: 0; background: transparent; font-size: 18px; color: #9999a2; }
+@media(max-width:680px){ .invite-banner { flex-wrap: wrap; } .invite-banner input { flex-basis: 100%; } }
+.access-modal{background:#0009;backdrop-filter:blur(10px)}.access-card{border:1px solid #ffffff20;box-shadow:0 30px 100px #0008}.access-card h2{font-size:23px;font-weight:550;letter-spacing:-.6px}.access-description{color:#9999a3}.access-close{color:#aaa}.access-submit{color:#171719;font-size:12px;font-weight:600}.access-input{background:#101012;color:#eee}.access-account{color:#b1b1ba;font-size:11px}.access-rooms{grid-column:1/-1;background:#141416;margin-top:30px;padding:22px;border-color:var(--line)}.workspace-entry:has(.access-rooms){grid-template-rows:auto auto}.access-rooms h2{font-size:16px;font-weight:500}.access-rooms a{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:10px 14px;margin:5px 8px 0 0;font-size:12px;text-decoration:none}.invite-banner{position:relative;top:auto;margin:0 0 18px;padding:10px 14px;box-shadow:none;font-family:inherit}.invite-banner strong{font-size:11px;font-weight:500;white-space:normal}.invite-banner .button.dark{color:#171719}.invite-banner button{font-size:10px;font-weight:500}.invite-banner input{background:#101012}.invite-banner.cta .invite-now{background:#29292f;color:#ddd;border-color:#ffffff20}.access-card{animation:surfaceEnter 180ms var(--ease)}

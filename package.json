@@ -1,0 +1,18 @@
+{
+  "name": "review-room",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "node --test server/server.test.js server/auth.test.js server/turn.test.js server/cloudflare-turn.test.js server/rstream-turn.test.js server/events.test.js tests/recording-upload.test.js tests/replay-media.test.js tests/webm-duration.test.js tests/connection-guard.test.js tests/review-package.test.js tests/review-mode.test.js vercel-backend/handler.test.js switch-host/proxy.test.js server/revisions.test.js vercel-backend/revisions.test.js"
+  },
+  "engines": {
+    "node": "24.x"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.14",
+    "@sparticuz/chromium": "153.0.0",
+    "playwright-core": "1.64.1"
+  },
+  "license": "MIT"
+}
