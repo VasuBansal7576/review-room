@@ -56,3 +56,5 @@ Nineteen synthetic adapter tests cover protocol requests, SSE framing, consent, 
 Docker 29.1.3 was confirmed running during preparation. No Switch room, account, membership or container was changed; no local Mattermost demonstration or live end-to-end bridge test was performed. Runtime interoperability and template import remain unverified. The adapter handles one explicitly selected proposed revision per process, limits its diff to 32,000 bytes, and stops on delivery discontinuity. It is a manual integration, not a fully automatic browser-to-chat pipeline.
 
 Upstream Switch is referenced, not copied or vendored. Its own license and dependency terms apply to separately obtained installations; no blanket MIT claim is made for it. This adapter and template are original Review Room source under this repository's MIT license.
+
+For the exact browser Finish boundary and required persistence/authentication work, see [the unfinished integration report](FINISH-INTEGRATION.md). Browser Finish does not enqueue or post a package in this release.
